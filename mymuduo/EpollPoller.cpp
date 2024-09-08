@@ -92,7 +92,7 @@ void EpollPoller::update(int operation,Channel *channel){
 }
 
 Timestamp EpollPoller::poll(int timeoutMs,ChannelList *activeChannels){
-    LOG_INFO("func=5s => fd total count:%d \n",__FUNCTION__,channels_.size());
+    LOG_INFO("func=%s => fd total count:%d \n",__FUNCTION__,channels_.size());
 
     int numEvents = ::epoll_wait(epollfd_,&*events_.begin(),static_cast<int>(events_.size()),timeoutMs);
     int saveErrno = errno;

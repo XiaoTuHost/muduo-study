@@ -30,6 +30,9 @@ public:
     void setErrorCallBack(EventCallBack cb) {errorCallBack_ = std::move(cb) ;}
 
     //防止channel被手动remove掉channel还在执行回调操作
+
+    // Tie this channel to the owner object managed by shared_ptr,
+    // prevent the owner object being destroyed in handleEvent.
     void tie(const std::shared_ptr<void>&);
 
     int fd()const  {return fd_;}
