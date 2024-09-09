@@ -1,5 +1,6 @@
 #include "Channel.h"
 #include "Logger.h"
+#include "EventLoop.h"
 
 #include <sys/epoll.h>
 
@@ -31,6 +32,7 @@ void Channel::update(){
     //通过channel所属的eventloop，调用poller相应方法，注册fd事件
     //add code
     //loop_->updateChannel(this);
+    loop_->updateChannel(this);
 }
 
 //在channel所属的EventLoop中，把当前channel删除掉
@@ -38,6 +40,7 @@ void Channel::remove()
 {
     //add code
     //loop_->removeChannel(this);
+    loop_->removeChannel(this);
 }
 
 //fd得到poller通知后，处理事件
