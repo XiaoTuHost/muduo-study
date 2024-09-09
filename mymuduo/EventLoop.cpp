@@ -91,6 +91,9 @@ void EventLoop::loop(){
 
 }
 
+
+// 退出事件循环
+// mainloop ---threadpool--- subloop
 void EventLoop::quit(){
 
     quit_ = true;
@@ -99,4 +102,69 @@ void EventLoop::quit(){
         wakeUp();
     }
     
+}
+
+// 在当前线程中执行cb
+void EventLoop::runInLoop(Functor cb){
+    if(isInLoopThread()){ //在当前的loop线程中，执行cb
+        cb();
+    }
+    else{   // 不在当前线程中执行cb，就需要唤醒loop所在的线程
+        /*code*/
+        queueInLoop(cb);
+    }
+}
+
+// 将cb放入队列中，唤醒loop所在的线程执行cb
+void EventLoop::queueInLoop(Functor cb){
+
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        pendingFunctors_.emplace_back(cb);
+    }
+
+    // 唤醒相应的需要执行上面回调操作的loop的线程了
+    // || calling...表示当前loop正在执行回调，但是loop又有了新的回调
+    if(!isInLoopThread() || callingPendingFunctors_){
+        wakeUp();
+    }
+
+}
+
+// 用来唤醒loop所在的线程 向wakeupfd_写一个数据 wakeupChannel就发生读事件
+void EventLoop::wakeUp(){
+    uint64_t one = 1;
+    ssize_t n = write(wakeUpFd_,&one,sizeof one);
+    if(n!=sizeof one){
+        LOG_ERROR("EventLoop::wakeup() writes %lu bytes instead of 8 \n",n);
+    }
+}
+
+void EventLoop::updateChannel(Channel *channel){
+    poller_->updateChannel(channel);
+}
+
+void EventLoop::removeChannel(Channel *channel){
+    poller_->removeChannel(channel);
+}
+
+bool EventLoop::hasChannel(Channel *channel){
+    return poller_->hasChannel(channel);
+}
+
+void EventLoop::doPendingFunctors(){
+
+    std::vector<Functor> functors;
+    callingPendingFunctors_ = true;
+
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        functors.swap(pendingFunctors_);
+    }
+
+    for(const Functor &functor : functors){
+        functor();  //执行当前loop需要执行的回调操作 
+    }
+
+    callingPendingFunctors_ = false;
 }
