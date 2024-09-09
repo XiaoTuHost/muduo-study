@@ -3,7 +3,7 @@
 #define __CURRENTTHREAD__H__
 
 namespace CurrentThread{
-    __thread int t_cachedTid = 0;
+    extern __thread int t_cachedTid;
 
 
     void cacheTid();
