@@ -42,3 +42,10 @@ void Thread::start(){
     // 这里必须等待获取上面新创建的tid值
     sem_wait(&sem);
 }
+
+void Thread::join(){
+
+    joined_ = true;
+    thread_->join();
+
+}
