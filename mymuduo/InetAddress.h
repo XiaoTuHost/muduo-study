@@ -10,6 +10,7 @@
 // socket封装
 class InetAddress{
 public:
+    InetAddress()=default;
     explicit InetAddress(uint16_t port,std::string ip="127.0.0.1");
     explicit InetAddress(const sockaddr_in & addr)
         : addr_(addr)
@@ -21,6 +22,7 @@ public:
 
     const sockaddr_in* getSockAddr() const {return &addr_;}
 
+    void setSockAddr(const sockaddr_in &addr){addr_=addr;}
 private:
     sockaddr_in addr_;
 };
