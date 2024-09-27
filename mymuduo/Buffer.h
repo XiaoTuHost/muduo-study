@@ -67,8 +67,6 @@ public:
     void ensureWritableBytes(size_t len){
         if(writableBytes() < len){
             makeSpace(len);
-        }else{
-
         }
     }
 
@@ -82,6 +80,18 @@ public:
             writeIndex_ = kCheapPrepend + readable;
         }   
     }   
+
+    void append(const char * data,size_t len){
+        ensureWritableBytes(len);
+        std::copy(data,data+len,beginWrite());
+        writeIndex_+=len;
+    }
+
+    char* beginWrite(){
+        return begin()+writeIndex_;
+    }
+
+    ssize_t readFd(int fd,int * saveErrno);
 
 private:
     char* begin() {
