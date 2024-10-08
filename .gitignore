@@ -1,0 +1,4 @@
+#忽略build目录
+build/
+#忽略lib目录
+lib/
