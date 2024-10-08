@@ -91,6 +91,8 @@ void TcpConnection::handleWrite(){
         LOG_ERROR("TcpConnection fd=%d is done , no more writing \n",channel_->fd());
     }
 }
+
+// poller => channel::closeCallBack => TcpConnction::handleClose
 void TcpConnection::handleClose(){
     LOG_INFO("fd=%d state=%d \n",channel_->fd(),(int)state_);
     setState(kDisconnected);

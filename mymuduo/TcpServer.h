@@ -42,8 +42,8 @@ public:
     void start();               
 private:
     void newConnection(int sockfd, const InetAddress &peerAddr);
-    void removeConnection(const TcpConnection &conn);
-    void removeConnectionInLoop(const TcpConnection &conn);
+    void removeConnection(const TcpConnectionPtr &conn);
+    void removeConnectionInLoop(const TcpConnectionPtr &conn);
 
     using ConnectionMap = std::unordered_map<std::string,TcpConnectionPtr>;
 
