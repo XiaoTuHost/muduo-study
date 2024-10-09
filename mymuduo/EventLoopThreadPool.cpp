@@ -13,6 +13,10 @@ EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop,const std::string &
 
 }
 
+EventLoopThreadPool::~EventLoopThreadPool(){
+
+}
+
 void EventLoopThreadPool::start(const ThreadInitCallBack& cb){
 
     started_= true;
@@ -42,6 +46,8 @@ EventLoop* EventLoopThreadPool::getNextLoop(){
             next_=0;
         }
     }
+
+    return loop;
 }
 
 std::vector<EventLoop*> EventLoopThreadPool::getAllLoops(){

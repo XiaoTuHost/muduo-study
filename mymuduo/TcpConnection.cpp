@@ -8,7 +8,7 @@
 
 static EventLoop* checkLoopNotNull(EventLoop *loop){
     if(loop==nullptr){
-        LOG_FATAL("%s:%s:%d mainloop is null!\n",__FILE__,__FUNCTION__,__LINE__);
+        LOG_FATAL("%s:%s:%d TcpConnection loop is null!\n",__FILE__,__FUNCTION__,__LINE__);
     }
     return loop;
 }
